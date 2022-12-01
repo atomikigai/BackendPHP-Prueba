@@ -19,17 +19,25 @@ class Recuperacion
 
         if ($request->input('email')){
             $email = $request->input('email');
-            $res = DB::select('select nombre, apellido from invitados where email = ?', [$email]);
+            $password = $request->input('password');
+            $res = DB::select('select nombre, apellido, password from invitados where email = ?', [$email]);
             $nombre = "";
             $apellido = "";
-            
+            $user_password = "";
+
             foreach($res as $val){
                 $nombre = $val->nombre;
                 $apellido = $val->apellido;
+                $user_password = $val->password;
             }
 
+            $password_result = password_verify($password, $user_password);
             if($res){
-                return response()->view('registro', ['email'=>$email,'nombre'=>$nombre, 'apellido'=>$apellido]);
+                if($password_result){
+                    return response()->view('registro', ['email'=>$email,'nombre'=>$nombre, 'apellido'=>$apellido]);                    
+                }else{
+                    return redirect()->route('recuperacion', ["error"=>"Contraseña incorrecta"]);
+                }
             }else{
                 $res = DB::select("select email from lista where email = ?", [$email]);
                 if($res){

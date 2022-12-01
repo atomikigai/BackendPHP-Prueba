@@ -95,6 +95,8 @@
                     @csrf
                     <label>Email</label>
                     <input name="email" type="email"/>
+                    <label>Contraseña</label>
+                    <input name="password" type="password"/>
                     <button type="submit"/>Recuperar</button>
                 </form>
 
