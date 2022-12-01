@@ -1,13 +1,19 @@
 <?php
+   
+   $notification = "";
+   $success = "";
+   $warning = "";
 
-    $errorvalue = "";
-    $invited = false;
-
-    if(isset($_GET["error"])){
-        $errorvalue = $_GET["error"];
+    if(!empty($_GET['message'])){
+        $notification = $_GET['message'];
     }
-    if(isset($_GET["invited"])){
-        $invited = $_GET["invited"];
+
+    if(!empty($_GET['success'])){
+        $success = $_GET['success'];
+    }
+
+    if(!empty($_GET['warning'])){
+        $warning = $_GET['warning'];
     }
 ?>
 
@@ -16,6 +22,7 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
         <title>Invitacion</title>
         <style>
             *{
@@ -26,15 +33,14 @@
 
             .invitaciones{
                 width: 100%;
-                height: auto;
+                height: 90vh;
                 display: flex;
                 justify-content: center;
                 align-items: center;
             }
-
+            
             .forms{
                 width: 40%;
-                height: 90vh;
                 display: flex;
                 justify-content: center;
                 align-items: center;
@@ -42,7 +48,7 @@
             }
 
             .forms form{
-                width: 100%;
+                width: 70%;
                 height: auto;
                 display: flex;
                 flex-direction: column;
@@ -78,42 +84,35 @@
                 background: #011f4b;
             }
 
-            form a{
-                text-decoration: none;
-                color: #005B96;
-            }
-
         </style>
     </head>
     <body>
-       <div class="invitaciones">
-
+        <div class="invitaciones">
             <div class="forms">
-            <h1>Recuperar contraseña</h1>
-            <p>Si te has registrado previamente puedes actualizar tus datos</p>
-                <form method="POST" action="recuperacion">
+                <h1>Invita a usuarios a participar</h1>
+                <p>Introduce un correo electronico y llegara un enlace para acceder</p>
+                <form method="POST" action="sendinvitation">
                     @csrf
                     <label>Email</label>
-                    <input name="email" type="email"/>
-                    <!-- <label>Contraseña</label>
-                    <input name="password" type="password"/> -->
-                    <button type="submit"/>Recuperar</button>
+                    <input name="email" type="email" required/>
+                    <label>Nombre</label>
+                    <input name="nombre" type="nombre" required/>
+                    <label>Apellido</label>
+                    <input name="apellido" type="apellido" required/>
+                    <button type="submit"/>Invitar</button>
                 </form>
+                <?php if(!empty($notification)){ ?>
+                    <p style="color:red;"><?php echo $notification ?></p>
+                <?php } ?>
 
-                <?php if(!empty($errorvalue)) {  ?>
-                    <p style="color:red"><?php echo $errorvalue ?><p>
-                <?php }else{ ?>
-                    <p></p>
-                <?php }?>
+                <?php if(!empty($success)){ ?>
+                    <p style="color:green;"><?php echo $success ?></p>
+                <?php } ?>
 
-                <?php if($invited) {  ?>
-                    <a 
-                        href="{{url('/')}}" 
-                        style="text-decoration:none;color:#005B96;font-size:15px;">Registrar</a>
-                <?php }else{ ?>
-                    <p></p>
-                <?php }?>
-            </div>
-       </div>
+                <?php if(!empty($warning)){ ?>
+                    <p style="color:#ffa700;"><?php echo $warning ?></p>
+                <?php } ?>
+            </div>       
+        </div>
     </body>
 </html>

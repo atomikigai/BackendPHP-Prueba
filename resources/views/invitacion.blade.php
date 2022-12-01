@@ -4,6 +4,9 @@
     $registered = false;
     $errorvalue = false;
     $empty = false;
+    $passwordval = false;
+    $emaiLog =  "";
+    session_start();
 
     if(!empty($email)){
         $emailvalue = $email;
@@ -21,7 +24,25 @@
         $empty = $emptyvalues;
     }
 
+    if(isset($_GET["emptyvalues"])){
+        $empty = $_GET["emptyvalues"];
+    }
     
+    if(isset($_GET["isregistered"])){
+        $registered = $_GET["isregistered"];
+    }
+
+    if(isset($_GET["passwordError"])){
+        $passwordval = $_GET["passwordError"];
+    }
+
+    if(isset($_GET["error"])){
+        $errorvalue = $_GET["error"];
+    }
+    
+    if(isset($_SESSION["email"])){
+        $emaiLog = $_SESSION["email"];
+    }
 ?>
 
 <!DOCTYPE html>
@@ -117,6 +138,20 @@
                 color: #005B96;
             }
 
+            .admin{
+                width: 100%;
+                height: 10vh;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+
+            .admin a{
+                text-decoration: none;
+                margin-right: 10px;
+                color: #005B96;
+            }
+
         </style>
     </head>
     <body>
@@ -129,9 +164,6 @@
                 </p>  
             </div>
             <div class="forms">
-            <div class="admin">
-                <a href=""></a>
-            </div>
             <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/Logo-ciat-es.svg/1200px-Logo-ciat-es.svg.png" width="120" height="120"/>
             <?php if(!$registered) {?>
                 <form method="POST" action="info">
@@ -141,15 +173,6 @@
                     <button type="submit"/>Acceder</button>
                 </form>
             <?php }?>
-
-            <?php if($errorvalue) {  ?>
-                <p style="color:red">- Necesitas una invitación o estar registrado para poder acceder<p>
-                <p style="color:red">- contacta con el administrador<p>
-            <?php } ?>
-
-            <?php if($empty) {  ?>
-                <p style="color:red">- Es necesario llenar los campos<p>
-            <?php } ?>
             
             <?php if($registered) {?>
                 <form method="POST" action="login">
@@ -162,6 +185,26 @@
                     <a href="{{url('/recuperacion')}}">Olvide mi contraseña</a>
                     <button type="submit"/>Acceder</button>
                 </form>
+            <?php } ?>
+
+            <?php if($errorvalue) {  ?>
+                <p style="color:red">- Necesitas una invitación o estar registrado para poder acceder<p>
+                <p style="color:red">- contacta con el administrador<p>
+            <?php } ?>
+
+            <?php if($empty) {  ?>
+                <p style="color:red">- Es necesario llenar los campos<p>
+            <?php } ?>
+
+            <?php if($passwordval) {  ?>
+                <p style="color:red">- Las contraseñas no coincide<p>
+            <?php } ?>
+
+            
+            <?php if(!empty($emaiLog)) { ?>
+                <div class="admin">
+                    <a href="{{url('/admin')}}">Acceso de administrador</a>
+                </div>
             <?php } ?>
             </div>
        </div>

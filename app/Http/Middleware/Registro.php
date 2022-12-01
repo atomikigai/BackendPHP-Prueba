@@ -43,7 +43,7 @@ class Registro
             }
 
         }else{
-            return redirect('/');
+            return redirect()->route('invitacion', ["error"=>true]);
         }
 
         session_start();

@@ -44,6 +44,16 @@ class RegistroController extends Controller
             $titleAdmin = "Datos Actualizados";
             $bodyAdmin = 'El usuario con correo: ' . $email . ' actualizo sus datos';
 
+            $mailDataUser = [
+                'title' => $titleUser,
+                'body' => $bodyUser,
+            ];
+            
+            $mailDataAdmin = [
+                'title' => $titleAdmin,
+                'body' => $bodyAdmin,
+            ];
+
             $res = DB::update('update invitados set
             email= ?, 
             nombre = ?, 
@@ -55,6 +65,7 @@ class RegistroController extends Controller
             password = ?
             where email = ?', [$req->email, $req->nombre, $req->apellido, 
             $req->direccion, $req->pais, $req->ciudad, $req->telefono, bcrypt($req->password), $req->email]);
+            
         }else{
             $isinvited = DB::select("select email from lista where email = ?", [$email]);
             if($isinvited){
@@ -69,7 +80,9 @@ class RegistroController extends Controller
         if($res){
             Mail::to($email)->send(new MyMail($mailDataUser));
             Mail::to('jostick516@gmail.com')->send(new MyMail($mailDataAdmin));
-            return redirect('dashboard');
+            session_start();
+            $_SESSION["email"] = $email;
+            return redirect()->route('invitacion');
         }
     }
 }
